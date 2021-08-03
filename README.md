@@ -75,23 +75,6 @@ Run `codegenCRAFT.m`. This script calls the `craftPredict.m` entry point functio
 
 Note: Performance (in FPS) is measured on a TITAN-RTX GPU using 672x992 image.
 
-Accuracy
----------
-
-| Dataset | Recall | Precision  | Hmean |
-| ------ | ------ | ------ | ------ |
-| ICDAR2013[2] | 92.60 | 91.84 | 91.81 |
-| ICDAR2017[3] | 62.29 | 78.68 | 69.53 |
-
-CRAFT Network Architecture
---------------------------
-
-![alt text](images/craft_architecture.PNG?raw=true)
-
-The architecture of CRAFT is composed of VGG-16 as backbone and skip connections in the decoding part, similar to U-net to aggregate low-level features. The UpConv blocks are made of convolutional and batch normalization layers. These blocks are used to perform upsampling.
-
-The pretrained CRAFT network takes the image as input and generates the output feature map with two channels that correspond to region score and affinity score. The region score represents the probability that the given pixel is the center of the character, and the affinity score represents the center probability of the space between adjacent characters. 
-
 Text Recognition using OCR + CRAFT
 ----------------------------------
 
@@ -127,6 +110,25 @@ Output of CRAFT network generates the quadrilateral-shape bounding boxes that ca
 ```
 
 <img src="images/ocr_result.jpg" alt ="image" width="550" height="350"/>
+
+Accuracy
+---------
+
+| Dataset | Recall | Precision  | Hmean |
+| ------ | ------ | ------ | ------ |
+| ICDAR2013[2] | 92.60 | 91.84 | 91.81 |
+| ICDAR2017[3] | 62.29 | 78.68 | 69.53 |
+
+CRAFT Network Architecture
+--------------------------
+
+![alt text](images/craft_architecture.PNG?raw=true)
+
+The architecture of CRAFT is composed of VGG-16 as backbone and skip connections in the decoding part, similar to U-net to aggregate low-level features. The UpConv blocks are made of convolutional and batch normalization layers. These blocks are used to perform upsampling.
+
+The pretrained CRAFT network takes the image as input and generates the output feature map with two channels that correspond to region score and affinity score. The region score represents the probability that the given pixel is the center of the character, and the affinity score represents the center probability of the space between adjacent characters. 
+
+
 
 Publication
 -----------
