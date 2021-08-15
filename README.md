@@ -42,7 +42,7 @@ Detect Objects Using Pretrained CRAFT
   [image, imageScale] = helper.preprocess(orgImg);
 
 % Output from CRAFT network for the given image
-out = predict(craftNet,dlarray(image,'SSCB'));
+  out = predict(craftNet,dlarray(image,'SSCB'));
     
 % Postprocess the output
   boundingBoxes = helper.postprocess(out,imageScale);
