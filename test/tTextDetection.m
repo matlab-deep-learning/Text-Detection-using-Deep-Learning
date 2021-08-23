@@ -13,8 +13,7 @@ classdef(SharedTestFixtures = {DownloadPretrainedCRAFTFixture}) tTextDetection <
         function exerciseDetection(test)            
             model = load(fullfile(test.RepoRoot,'model','craftNet.mat'));
             inpImage = imread('businessCard.png');
-            outputNames = {'Conv_118','Relu_109'};
-            out = cell(size(outputNames'));
+           
 
             expectedBBoxes = [161.3333, 61.3333,542.6667, 61.3333,542.6667,145.3333,161.3333,145.3333;
                 169.3333,312.0000,192.0000,312.0000,192.0000,340.0000,169.3333,340.0000;
@@ -33,7 +32,7 @@ classdef(SharedTestFixtures = {DownloadPretrainedCRAFTFixture}) tTextDetection <
             [image, imageScale] = helper.preprocess(inpImage);
            
             %Inferance
-            [out{:}] = predict(model.craftNet,dlarray(image,'SSCB'),'Outputs',outputNames);
+            out = predict(model.craftNet,dlarray(image,'SSCB'));
 
             %Post process to get the boundingBoxes
             boundingBoxes = helper.postprocess(out,imageScale);
