@@ -2,6 +2,8 @@
 
 This repository implements a pretrained Character Region Awareness For Text detection (CRAFT) [1] model in MATLAB&reg;.
 
+[![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=matlab-deep-learning/Text-Detection-using-Deep-Learning)
+
 Requirements
 ------------  
 
