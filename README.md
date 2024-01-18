@@ -4,108 +4,63 @@ This repository implements a pretrained Character Region Awareness For Text dete
 
 [![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=matlab-deep-learning/Text-Detection-using-Deep-Learning)
 
+**Creator**: MathWorks Development
+
 Requirements
 ------------  
 
-- MATLAB R2021a or later
+- MATLAB R2022a or later
 - Deep Learning Toolbox&trade;
 - Computer Vision Toolbox&trade;
+- Computer Vision Toolbox&trade; Model for Text Detection
+  
+Note: Previous MATLAB release users can use this branch to download the pretrained models.
 
 Overview
 --------
 
-This repository implements CRAFT with VGG-16 as backbone. The network is trained on various scene text detection datasets with text in English, Korean, Italian, French, Arabic, German and Bangla (Indian). 
+This repository implements text detection in images using CRAFT deep learning model with VGG-16 as backbone. The network is trained on various scene text detection datasets with text in English, Korean, Italian, French, Arabic, German and Bangla (Indian). 
 
 CRAFT uses a convolutional neural network to produce two outputs, region score, and affinity score. The region score localizes individual characters in the image, and the affinity score groups each character into a single instance. The character-level region awareness mechanism helps in detecting texts of various shapes such as long, curved, and arbitrarily shaped texts.
 
 Getting Started
 ---------------
-Download or clone this repository to your machine and open it in MATLAB.
-### Setup
-Add path to the source directory.
+[detectTextCRAFT](https://in.mathworks.com/help/vision/ref/detecttextcraft.html) - Detect texts in images by using CRAFT deep learning model
 
-`addpath('src');`
-
-### Load the pretrained network
-Use the below helper to download the pretrained network.
-```
-model = helper.downloadPretrainedCRAFT;
-craftNet = model.craftNet;
-```
-
-Detect Objects Using Pretrained CRAFT
+Detect Text Using Pretrained CRAFT
 ---------------------------------------
-
+Note: This functionality requires Deep Learning Toolbox&trade; and the Computer Vision Toolbox&trade; Model for Text Detection. You can install the Computer Vision Toolbox Model for Text Detection from Add-On Explorer. For more information about installing add-ons, see [Get and Manage Add-Ons](https://in.mathworks.com/help/matlab/matlab_env/get-add-ons.html).
 ```
 % Read test image.
   orgImg = imread('businessCard.png');
 
-% Pre-process the image
-  [image, imageScale] = helper.preprocess(orgImg);
-
-% Output from CRAFT network for the given image
-  out = predict(craftNet,dlarray(image,'SSCB'));
-    
-% Postprocess the output
-  boundingBoxes = helper.postprocess(out,imageScale);
+% Perform text detection
+  bboxes = detectTextCRAFT(orgImg);
     
 % Visualize results
-  outImg = insertShape(orgImg,'Polygon',boundingBoxes,'LineWidth',5,'Color',"yellow");
+  outImg = insertShape(I,"rectangle",bboxes,LineWidth=3);
   figure; imshow(outImg);
 ```
 
 <img src="images/business_card.png" alt ="image" width="550" height="350"/>
 
-If the image contains text in arbitrary shape then change the value of `polygonText` variable in `src/+helper/postprocess.m` to `true`.
-
-The CRAFT network has three tunable parameters, text threshold, low text and link threshold. Tune these hyperparameters in `src/+helper/postprocess.m` to get better results. 
-- Text threshold: Higher value indicates that character in image has to be more clear to be considered as text.
-- Low text: Higher value will give less boundary space around characters.
-- Link threshold: Higher value will increase the amount by which two characters will be considered as single word.
-
-Code Generation for CRAFT
----------------------------------------
-Code generation enables you to generate code and deploy CRAFT on multiple embedded platforms.
-
-Run `codegenCRAFT.m`. This script calls the `craftPredict.m` entry point function and generate CUDA code for it. It will run the generated MEX and gives output.
-| Model | Inference Speed (FPS) | 
-| ------ | ------ | 
-| CRAFT w/o codegen | 3.044 |
-| CRAFT with codegen | 5.356 |
-
-Note: Performance (in FPS) is measured on a TITAN-RTX GPU using 672x992 image.
-
 Text Recognition using OCR + CRAFT
 ----------------------------------
 
-Output of CRAFT network generates the quadrilateral-shape bounding boxes that can be passed to `ocr` function as region of interest (roi) for text recognition applications.
+Output of `detectTextCRAFT` return the bounding boxes that can be passed to `ocr` function as region of interest (roi) for text recognition applications.
 
 ```
-% Convert boundingBoxes format from [x1 y1 ... x8 y8] to [x y w h].
-  roi = [];
-  for i = 1:size(boundingBoxes,1)
-    w = norm(boundingBoxes(i,[3 4]) - boundingBoxes(i,[1 2]));
-    h = norm(boundingBoxes(i,[5 6]) - boundingBoxes(i,[3 4]));
-    roi = [roi; [boundingBoxes(i,1) boundingBoxes(i,2) w h]];
-  end
-
 % Binarizing the image before using OCR for better results.
   I = rgb2gray(orgImg);
   BW = imbinarize(I, 'adaptive','ForegroundPolarity','dark','Sensitivity',0.5);
   figure; imshow(BW);
 
 % OCR this image using region-of-interest for OCR to avoid processing non-text background.
-  txt = ocr(BW,roi,'TextLayout','word');
-  word =[];
-  idx = [];
-  for i = 1:size(roi,1)
-      if ~isempty(txt(i,1).Words)
-              [~,index] = max(txt(i,1).WordConfidences);
-              word = [word; txt(i,1).Words(index)];
-              idx = [idx i];  
-      end
-  end
-  Iocr = insertObjectAnnotation(orgImg, 'rectangle',roi(idx,:),word);
+  txt = ocr(BW,roi,'LayoutAnalysis','word');
+
+% Display the recognized words.
+  recognizedWords = cat(1,txt(:).Words);
+  Iocr = insertObjectAnnotation(orgImg, 'rectangle',bboxes,recognizedWords);
   figure; imshow(Iocr);
 ```
 
