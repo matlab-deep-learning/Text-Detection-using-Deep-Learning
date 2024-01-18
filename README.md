@@ -38,7 +38,7 @@ Note: This functionality requires Deep Learning Toolbox&trade; and the Computer 
   bboxes = detectTextCRAFT(orgImg);
     
 % Visualize results
-  outImg = insertShape(I,"rectangle",bboxes,LineWidth=3);
+  outImg = insertShape(orgImg,"rectangle",bboxes,LineWidth=3);
   figure; imshow(outImg);
 ```
 
@@ -56,7 +56,7 @@ Output of `detectTextCRAFT` return the bounding boxes that can be passed to `ocr
   figure; imshow(BW);
 
 % OCR this image using region-of-interest for OCR to avoid processing non-text background.
-  txt = ocr(BW,roi,'LayoutAnalysis','word');
+  txt = ocr(BW,bboxes,'LayoutAnalysis','word');
 
 % Display the recognized words.
   recognizedWords = cat(1,txt(:).Words);
