@@ -94,4 +94,4 @@ Publication
 
 [3] https://rrc.cvc.uab.es/?ch=8&com=downloads
 
-Copyright 2021 The MathWorks, Inc.
+Copyright 2021-2024 The MathWorks, Inc.
