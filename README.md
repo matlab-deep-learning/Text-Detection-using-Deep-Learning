@@ -14,7 +14,7 @@ Requirements
 - Computer Vision Toolbox&trade;
 - Computer Vision Toolbox&trade; Model for Text Detection
   
-Note: Previous MATLAB release users can use this branch to download the pretrained models.
+Note: Previous MATLAB release users can use [this](https://github.com/matlab-deep-learning/Text-Detection-using-Deep-Learning/tree/previous) branch to download the pretrained models.
 
 Overview
 --------
