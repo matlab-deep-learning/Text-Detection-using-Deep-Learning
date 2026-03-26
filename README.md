@@ -90,8 +90,8 @@ Publication
 
 [1] Baek, Y., Lee, B., Han, D., Yun, S. and Lee, H., 2019. Character region awareness for text detection. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (pp. 9365-9374).
 
-[2] https://rrc.cvc.uab.es/?ch=2&com=downloads
+[2] https://rrc.cvc.uab.es/?ch=2
 
-[3] https://rrc.cvc.uab.es/?ch=8&com=downloads
+[3] https://rrc.cvc.uab.es/?ch=8
 
 Copyright 2021-2024 The MathWorks, Inc.
